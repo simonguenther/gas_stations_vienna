@@ -1,6 +1,7 @@
 from crawler_avanti import Avanti_Crawler
 from crawler_oemv import OEMV_Crawler
 from crawler_aral import Aral_Crawler
+from crawler_shell import Shell_Crawler
 
 """
     TODO
@@ -9,11 +10,12 @@ from crawler_aral import Aral_Crawler
     - generalize global variables 
 """
 
-#avanti = Avanti_Crawler()
-#oemv = OEMV_Crawler()
+avanti = Avanti_Crawler()
+oemv = OEMV_Crawler()
 aral = Aral_Crawler()
+shell = Shell_Crawler()
 
+shell.crawl()
 aral.crawl()
-
-#avanti.crawl()
-#oemv.crawl()
+avanti.crawl()
+oemv.crawl()
