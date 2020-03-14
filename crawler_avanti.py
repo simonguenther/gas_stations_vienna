@@ -8,24 +8,17 @@ from proxy.proxy_scraper import getFreeProxies
 from helper.manage_omv_session import Omvpetrom
 from helper.image_processing import ImageProcessing
 from helper.time_helper import timestamp_log, timestamp_file
-#import helper.path_variables
 
-"""
-Todo:
- - implement logger module in all files
-"""
-
-class OEMV_Crawler():
-    
+class Avanti_Crawler():
     def __init__(self, verbose = False):
         
         #logging.basicConfig(filename='oemv_app.log', filemode='w', format='%(asctime)s - %(levelname)s - %(message)s', level=logging.DEBUG)
-        self.JSON_PATH = "/Users/simon/python/gas_station_crawler/json/gas_stations_oemv.json"
+        self.JSON_PATH = "/Users/simon/python/gas_station_crawler/json/gas_stations_avanti.json"
         self.URL = "https://app.wigeogis.com/kunden/omvpetrom/data/details.php"
         self.OUTPUT_DIR = "/Users/simon/python/gas_station_crawler/data/"
         self.STATION_LIST = load_dictionary_from_json(self.JSON_PATH)['results']
         self.SESSION_PARAMS = self.refresh_session()
-        self.CRAWLER_NAME = "OEMV"
+        self.CRAWLER_NAME = "AVANTI"
         self.USE_PROXY_FOR_CRAWLING = False
         self.PICTURE_FORMAT = "png"
         
@@ -39,6 +32,7 @@ class OEMV_Crawler():
 
     def get_price_url(self, station_id, proxy = None):
         self.SESSION_PARAMS['ID'] = station_id
+        pprint.pprint(self.SESSION_PARAMS)
         data = urllib.parse.urlencode(self.SESSION_PARAMS).encode()
 
         if(proxy == None):
@@ -71,23 +65,24 @@ class OEMV_Crawler():
             
             # Only check Vienna stations
             if(station['town_l'] == 'Wien'):
-                
                 # get price for stations
                 sid = station['sid']
 
                 print("-"*40)
                 print("Processing: ", sid)
+                
                 if(self.USE_PROXY_FOR_CRAWLING):
                     price_url = self.get_price_url(sid, proxy_wport)
                 else:
                     price_url = self.get_price_url(sid)
                 print("Price URL: ", price_url)
-
+                
                 # Extract Price Info From Image
                 processor = ImageProcessing(price_url)
                 res = processor.process()
-
+                
                 all_prices[sid] = res
+                
         return all_prices
 
     def save_pricefeed(self, feed):
@@ -97,4 +92,3 @@ class OEMV_Crawler():
     def crawl(self):
         pricefeed = self.extract_prices_all_station()
         self.save_pricefeed(pricefeed)
-
