@@ -29,7 +29,6 @@ class OEMV_Crawler():
         self.USE_PROXY_FOR_CRAWLING = False
         self.PICTURE_FORMAT = "png"
         
-        print("Total stations loaded: ", len(self.STATION_LIST))
         #print("Session parameters: ")
         #pprint.pprint(self.SESSION_PARAMS)
 

@@ -3,6 +3,7 @@ import urllib
 import pytesseract
 import time
 import logging
+from helper.time_helper import timestamp_log
 
 class ImageProcessing():
 
@@ -49,7 +50,7 @@ class ImageProcessing():
         im = Image.open(self.ENHANCED)
         width, height = im.size
         offset = 40
-        pricelist = []
+        pricelist = {}
         while(offset + 25 <= height):
             cropped = im.crop((0,offset,width,offset+25))
             name = self.TMP_DIRECTORY+str(offset)+"__.png"
@@ -72,7 +73,8 @@ class ImageProcessing():
                 gastype = self.transform(gastype)
 
                 price = prices[-1]
-                pricelist.append((gastype,price))
+                pricelist[gastype] = price
+                pricelist["timestamp"] = timestamp_log()
             else:
                 print("Not enough price splits to continue")
                 error_id = str(int(time.time()))
