@@ -3,15 +3,15 @@ import requests
 import json
 import time
 import pprint
+import config
 from helper.manage_json import load_dictionary_from_json, save_dictionary_to_json
 from helper.time_helper import timestamp_file, timestamp_log
 
 class Shell_Crawler():
 
     def __init__(self):
-        self.JSON_PATH = "/Users/simon/python/gas_station_crawler/json/gas_stations_shell.json"
-        self.PRICEFEED_URL = ""
-        self.OUTPUT_DIR = "/Users/simon/python/gas_station_crawler/data/"
+        self.JSON_PATH = config.JSON_DIR+"gas_stations_shell.json"
+        self.OUTPUT_DIR = config.OUTPUT_DIR
         self.STATION_LIST = load_dictionary_from_json(self.JSON_PATH)
         self.CRAWLER_NAME = "SHELL"
         self.USE_PROXY_FOR_CRAWLING = False

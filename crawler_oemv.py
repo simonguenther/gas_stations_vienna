@@ -3,6 +3,7 @@ import urllib
 import json
 import time
 import pprint
+import config
 from helper.manage_json import load_dictionary_from_json, save_dictionary_to_json
 from proxy.proxy_scraper import getFreeProxies
 from helper.manage_omv_session import Omvpetrom
@@ -20,14 +21,15 @@ class OEMV_Crawler():
     def __init__(self, verbose = False):
         
         #logging.basicConfig(filename='oemv_app.log', filemode='w', format='%(asctime)s - %(levelname)s - %(message)s', level=logging.DEBUG)
-        self.JSON_PATH = "/Users/simon/python/gas_station_crawler/json/gas_stations_oemv.json"
+        self.JSON_PATH = config.JSON_DIR+"gas_stations_oemv.json"
         self.URL = "https://app.wigeogis.com/kunden/omvpetrom/data/details.php"
-        self.OUTPUT_DIR = "/Users/simon/python/gas_station_crawler/data/"
+        self.OUTPUT_DIR = config.OUTPUT_DIR
         self.STATION_LIST = load_dictionary_from_json(self.JSON_PATH)['results']
         self.SESSION_PARAMS = self.refresh_session()
         self.CRAWLER_NAME = "OEMV"
         self.USE_PROXY_FOR_CRAWLING = False
         self.PICTURE_FORMAT = "png"
+        print("Total stations loaded: ", len(self.STATION_LIST))
         
         #print("Session parameters: ")
         #pprint.pprint(self.SESSION_PARAMS)
@@ -44,7 +46,7 @@ class OEMV_Crawler():
             raw = urllib.request.urlopen(self.URL, data=data)
         else:
             ipport = list(proxy.values())[0]
-            print("Using proxy for request: ", ipport)
+            #print("Using proxy for request: ", ipport)
             #create the object, assign it to a variable
             _proxy = urllib.request.ProxyHandler({'http': ipport})
             # construct a new opener using your proxy settings
@@ -74,13 +76,13 @@ class OEMV_Crawler():
                 # get price for stations
                 sid = station['sid']
 
-                print("-"*40)
+                #print("-"*40)
                 print("Processing: ", sid)
                 if(self.USE_PROXY_FOR_CRAWLING):
                     price_url = self.get_price_url(sid, proxy_wport)
                 else:
                     price_url = self.get_price_url(sid)
-                print("Price URL: ", price_url)
+                #print("Price URL: ", price_url)
 
                 # Extract Price Info From Image
                 processor = ImageProcessing(price_url)

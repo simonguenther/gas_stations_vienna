@@ -2,6 +2,7 @@ from bs4 import BeautifulSoup
 import requests
 import json
 import time
+import config
 import pprint
 from helper.manage_json import load_dictionary_from_json, save_dictionary_to_json
 from helper.time_helper import timestamp_file, timestamp_log
@@ -10,9 +11,9 @@ from helper.time_helper import timestamp_file, timestamp_log
 class Aral_Crawler():
 
     def __init__(self):
-        self.JSON_PATH = "/Users/simon/python/gas_station_crawler/json/gas_stations_aral.json"
+        self.JSON_PATH = config.JSON_DIR+"gas_stations_aral.json"
         self.PRICEFEED_URL = "https://bpatpricesfe.geoapp.me/v1/at/prices?bpc_txt_pricing_disclaimer=Ohne%20gewahr%20-%20es%20geiten%20de%20Preise%20an%20der%20Zapfsaule&bpc_txt_pricing_na=Preise%20zur%20Zeit%20nicht%20verf%C3%BCgbar&bpc_txt_pricing_stand=Stand&project=navitas&branding=bp&location_id="
-        self.OUTPUT_DIR = "/Users/simon/python/gas_station_crawler/data/"
+        self.OUTPUT_DIR = config.OUTPUT_DIR
         self.STATION_LIST = load_dictionary_from_json(self.JSON_PATH)
         self.CRAWLER_NAME = "ARAL"
         self.USE_PROXY_FOR_CRAWLING = False
@@ -25,7 +26,7 @@ class Aral_Crawler():
     """
     def get_price_page_from_station_id(self, station_id):
         lookup_url = self.PRICEFEED_URL+station_id
-        print("Fetching Price sourcecode")
+        #print("Fetching Price sourcecode")
         source = requests.get(lookup_url)
         return BeautifulSoup(source.text, "html.parser")
 
